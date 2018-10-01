@@ -1,0 +1,4 @@
+--> Scalable Computing: IoT
+-devices tend to be connected intermittently
+-devices are limited due to processing, battery, power
+-
