@@ -1,9 +1,9 @@
 cracked = False
 
-with open("des.hashes", "a") as u:
+with open("md5Uncracked.hashes", "a") as u:
 	with open("duffyc8.broken", "r") as cslist:
 		cs=cslist.readlines()
-		with open("desUncracked.hashes", "r") as hslist:
+		with open("md5.hashes", "r") as hslist:
 			hs=hslist.readlines()
 			hs= [x.strip() for x in hs]
 			for h in hs:
