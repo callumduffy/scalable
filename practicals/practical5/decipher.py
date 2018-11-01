@@ -208,15 +208,21 @@ tuples = []
 
 for pw in passwords:
     hin = 0
+    splitIndex = 1
     for h in hashes:
         if pw != "":
-            splitpw = pw.split(":",1)
-            if splitpw[0] in h:
-                tuples.append((splitpw[1],hin))
-            hin+=1
+            if "$pbkdf2" in pw:
+                splitpw = pw.split(":",2)
+                hashstring = splitpw[0] + splitpw[1]
+                splitIndex = 2
+            else:
+                splitpw = pw.split(":",1)
+                splitIndex = 1
+                hashstring = splitpw[0]
 
-for t in tuples:
-    print(t[0] + " ---", t[1])
+            if hashstring in h:
+                tuples.append((splitpw[splitIndex],hin))
+            hin+=1
 
 #finally a loop to run from a to len(tuples) to check for two subsequent equal secrets
 plist = []
