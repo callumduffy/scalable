@@ -190,12 +190,13 @@ passwords=[]
 print ("Reading in passwords.")
 with open(args.pwdfile,"r") as pwdf:
     for line in pwdf:
-            print("Appending password" + line)
-            passwords.append(line.strip())
+        print("Appending password: " + line)
+        passwords.append(line.strip())
 l=len(passwords)
 
 #read in the cipher json file
-infernofile = json.loads(args.infernofile)
+with open(args.infernofile, 'r') as f:
+            infernofile = json.load(f)
 
 cipher = infernofile['ciphertext']
 hashes = infernofile['hashes']
@@ -208,9 +209,14 @@ tuples = []
 for pw in passwords:
     hin = 0
     for h in hashes:
-        if pw.split(":",1)[0] in h:
-            tuples.append((pw.split(":",1)[1],hin))
-        hin+=1
+        if pw != "":
+            splitpw = pw.split(":",1)
+            if splitpw[0] in h:
+                tuples.append((splitpw[1],hin))
+            hin+=1
+
+for t in tuples:
+    print(t[0] + " ---", t[1])
 
 #finally a loop to run from a to len(tuples) to check for two subsequent equal secrets
 plist = []
