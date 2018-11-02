@@ -215,14 +215,14 @@ for pw in passwords:
     splitIndex = 1
     for h in hashes:
         if pw != "":
-            if "$pbkdf2" in pw:
-                splitpw = pw.split(":",2)
-                hashstring = splitpw[0] + splitpw[1]
-                splitIndex = 2
-            else:
-                splitpw = pw.split(":",1)
-                splitIndex = 1
-                hashstring = splitpw[0]
+            #if "$pbkdf2" in pw:
+             #   splitpw = pw.split(":",2)
+             #   hashstring = splitpw[0] + splitpw[1]
+             #   splitIndex = 2
+            #else:
+            splitpw = pw.split(":",1)
+            splitIndex = 1
+            hashstring = splitpw[0]
 
             if hashstring in h:
                 tuples.append((splitpw[splitIndex],hin))
@@ -233,17 +233,22 @@ plist = []
 ilist = []
 prev_secret = ""
 secret = ""
-
+print len(tuples)
 for t in tuples:
+    print("pw:"+t[0]+"(STOP):",t[1])
     plist.append(t[0])
     ilist.append(t[1])
-    secret = pwds_shares_to_secret(plist,ilist,shares)
-    print("secret for k=" + len(plist) + ": "+ secret)
-    if secret is prev_secret:
-        print("SUCCESS: K is " + len(plist))
-        print("SECRET: " + secret)
-        sys.exit(0)
-    prev_secret = secret
+    print len(ilist)
+    print len(plist)
+    for s in shares:
+        print s
+    #secret = pwds_shares_to_secret(plist,ilist,shares)
+    #print("secret for k=" + len(plist) + ": "+ secret)
+    #if secret is prev_secret:
+    #    print("SUCCESS: K is " + len(plist))
+    #    print("SECRET: " + secret)
+    #    sys.exit(0)
+    #prev_secret = secret
 
 # not enough passwords cracked yet
 print("Keep on cracking, k not reached yet!")

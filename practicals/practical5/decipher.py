@@ -193,7 +193,6 @@ with open(args.pwdfile,"r") as pwdf:
         print("Appending password: " + line)
         passwords.append(line.strip())
 l=len(passwords)
-
 #read in the cipher json file
 with open(args.infernofile, 'r') as f:
             infernofile = json.load(f)
@@ -221,7 +220,7 @@ for pw in passwords:
                 hashstring = splitpw[0]
 
             if hashstring in h:
-                tuples.append((splitpw[splitIndex],hin))
+                tuples.append((splitpw[splitIndex].strip(),hin))
             hin+=1
 
 #finally a loop to run from a to len(tuples) to check for two subsequent equal secrets
@@ -229,6 +228,9 @@ plist = []
 ilist = []
 prev_secret = ""
 secret = ""
+
+for s in shares:
+    s.strip()
 
 for t in tuples:
     plist.append(t[0])
