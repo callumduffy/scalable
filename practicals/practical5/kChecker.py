@@ -231,24 +231,23 @@ for pw in passwords:
 #finally a loop to run from a to len(tuples) to check for two subsequent equal secrets
 plist = []
 ilist = []
+slist = []
 prev_secret = ""
 secret = ""
-print len(tuples)
+i=0
+
 for t in tuples:
-    print("pw:"+t[0]+"(STOP):",t[1])
     plist.append(t[0])
-    ilist.append(t[1])
-    print len(ilist)
-    print len(plist)
-    for s in shares:
-        print s
-    #secret = pwds_shares_to_secret(plist,ilist,shares)
-    #print("secret for k=" + len(plist) + ": "+ secret)
-    #if secret is prev_secret:
-    #    print("SUCCESS: K is " + len(plist))
-    #    print("SECRET: " + secret)
-    #    sys.exit(0)
-    #prev_secret = secret
+    ilist.append(i)
+    slist.append(shares[t[1]])
+    secret = pwds_shares_to_secret(plist,ilist,slist)
+    print("secret for k=" + len(plist) + ": "+ secret)
+    if secret is prev_secret:
+        print("SUCCESS: K is " + len(plist))
+        print("SECRET: " + secret)
+        sys.exit(0)
+    prev_secret = secret
+    i+=1
 
 # not enough passwords cracked yet
 print("Keep on cracking, k not reached yet!")
