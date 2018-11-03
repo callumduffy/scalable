@@ -127,7 +127,7 @@ passwords=[]
 print ("Reading in passwords.")
 with open(args.pwdfile,"r") as pwdf:
     for line in pwdf:
-        print("Appending password: " + line)
+       # print("Appending password: " + line)
         passwords.append(line.strip())
 l=len(passwords)
 
@@ -147,7 +147,7 @@ for pw in passwords:
     splitIndex = 1
     for h in hashes:
         if pw != "":
-            splitpw = pw.split(":",1)
+            splitpw = pw.split(delimiter,1)
             splitIndex = 1
             hashstring = splitpw[0]
 
@@ -170,7 +170,7 @@ for t in tuples:
     slist.append((shares[t[1]].strip()).encode('ascii', 'replace'))
 
     secret = pwds_shares_to_secret(plist,ilist,slist)
-    print"secret =" + secret
+    print"secret = " + secret
     if secret is prev_secret:
         enoughK = True
         print("SUCCESS: K is " + str(len(plist)))
@@ -186,4 +186,4 @@ if enoughK:
     print ("Newest infernoball in nextInferno.json")
 else:
     # not enough passwords cracked yet
-    print("Keep on cracking, k not reached yet!")
+    print("Keep on cracking, k not reached yet! Currently have " + str(len(plist)) + " cracked.")
