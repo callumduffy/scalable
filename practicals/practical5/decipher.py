@@ -171,7 +171,7 @@ for t in tuples:
 
     secret = pwds_shares_to_secret(plist,ilist,slist)
     print"secret = " + secret
-    if secret is prev_secret:
+    if secret == prev_secret:
         enoughK = True
         print("SUCCESS: K is " + str(len(plist)))
         print("SECRET: " + secret)
