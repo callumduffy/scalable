@@ -7,6 +7,8 @@
 #   source to edit for me was:
 #   /usr/local/lib/python2.7/dist-packages/secretsharing/entropy.py
 import secretsharing as sss
+import argparse
+import json
 
 import base64
 from Crypto import Random
@@ -126,7 +128,6 @@ with open(args.infernofile, 'r') as f:
 cipher = infernofile['ciphertext']
 hashes = infernofile['hashes']
 shares = infernofile['shares']
-
 #now need to map our cracked hashes to the hashes from json
 #creating a list of tuples in the form (password, index)
 tuples = []
@@ -160,31 +161,17 @@ i=0
 for t in tuples:
     plist.append(t[0])
     ilist.append(i)
-    slist.append(shares[t[1]])
+    slist.append((shares[t[1]].strip()).encode('ascii', 'replace'))
+
     secret = pwds_shares_to_secret(plist,ilist,slist)
-    print("secret for k=" + len(plist) + ": "+ secret)
-    if i == 2:
-        if secret is prev_secret:
-            print("SUCCESS: K is " + len(plist))
-            print("SECRET: " + secret)
-            sys.exit(0)
+    print"secret =" + secret
+    if secret is prev_secret:
+        print("SUCCESS: K is " + str(len(plist)))
+        print("SECRET: " + secret)
+        #sys.exit(0)
     prev_secret = secret
     i+=1
 
 # not enough passwords cracked yet
 print("Keep on cracking, k not reached yet!")
-sys.exit(0)
-
-
-pwds = ["ClemNate", "rearSikh", "lopsDior"]#, "antakya", "Booter", "weeds425"]#, "watt2004"]#, "tqep8383", "tikionna", "sissy111", "sisozine", "sam4min", "rickejeh", "rufus139"]
-shares = ["8-7b2f6f68df28cf49380ade1479c1ec4e3021b79f079f4657e0df517802070029","94-1973177500dd2976f5021ab8fae7b6915f29670fedebd234ecdcd026ab952d57","98-2779c6714ed81abfd16e0d55e3ef604b34f4307c9dd53139d6544828d3b09949"]#,"16-f1d390ed44b68ad6d11c09b084e531d7","24-3ecb653a71c2282654282be8b99440c2","a-be24d7e38817a5c32da1698ec2e2fb67"]#,"28-0b154be9ba9f71dc66396a12c8c7fb46"]#,"15-9bf6e58e58b60349703509622af807dc","26-d0a48a10527e8825e089892deea0d563","17-e59a9a9c5acae58a17bc7f2dd7a776da","20-195bd12323085f12d93066c4c9c776ed","1d-0a0205933641833b8ebb187fb22bf9a1","b-9196fe70d7499894a309ef3a43163924","1b-07653c3f27e5c5ca6e97032c7ed95c21",]
-kinds = [0, 1,2,]#3,4,5]
-secret = pwds_shares_to_secret(pwds,kinds, shares)
-
-enc =""
-result = decrypt(jsonpickle.encode(enc), secret.zfill(32).decode('hex'))
-
-with open("res","w") as out:
-    out.write(result)
-print (result)
-print ("end...")
+#sys.exit(0)
