@@ -97,10 +97,13 @@ def decrypt(enc, password):
 argparser=argparse.ArgumentParser(description='See if we can decrypt the ciphertext yet.')
 argparser.add_argument('-p','--passwords',     
                     dest='pwdfile',
-                    help='file containing passwords, format: "<hash>:<password>"')
+                    help='file containing passwords, format: "<hash> <password>"')
 argparser.add_argument('-i','--inferno',     
                     dest='infernofile',
-                    help='file containing inferno ball as json."')
+                    help='file containing inferno ball as json.')
+argparser.add_argument('-d','--delimiter',     
+                    dest='delim',
+                    help='delimiter between password and hash if not default')
 args=argparser.parse_args()
 
 # post opt checks
@@ -111,6 +114,13 @@ if args.pwdfile is None:
 if args.infernofile is None:
     print("Must pass the infernoball json file.")
     sys.exit(5)
+
+
+delimiter = " "
+if args.delim is None:
+    delimiter = " "
+else:
+    demlimiter = args.delim
 
 # read passwords in, however will read hash and password as hash needed for mapping
 passwords=[]
@@ -137,11 +147,6 @@ for pw in passwords:
     splitIndex = 1
     for h in hashes:
         if pw != "":
-            #if "$pbkdf2" in pw:
-             #   splitpw = pw.split(":",2)
-             #   hashstring = splitpw[0] + splitpw[1]
-             #   splitIndex = 2
-            #else:
             splitpw = pw.split(":",1)
             splitIndex = 1
             hashstring = splitpw[0]
@@ -156,6 +161,7 @@ ilist = []
 slist = []
 prev_secret = ""
 secret = ""
+enoughK = False
 i=0
 
 for t in tuples:
@@ -166,12 +172,18 @@ for t in tuples:
     secret = pwds_shares_to_secret(plist,ilist,slist)
     print"secret =" + secret
     if secret is prev_secret:
+        enoughK = True
         print("SUCCESS: K is " + str(len(plist)))
         print("SECRET: " + secret)
-        #sys.exit(0)
     prev_secret = secret
     i+=1
 
-# not enough passwords cracked yet
-print("Keep on cracking, k not reached yet!")
-#sys.exit(0)
+if enoughK:
+    result = decrypt(jsonpickle.encode(enc), secret.zfill(32).decode('hex'))
+
+    with open("nextInferno.json","w") as out:
+        out.write(result)
+    print ("Newest infernoball in nextInferno.json")
+else:
+    # not enough passwords cracked yet
+    print("Keep on cracking, k not reached yet!")
